@@ -39,6 +39,12 @@ App.IndexRoute = Ember.Route.extend({
   }
 });
 
+App.Router.map(function() {
+  this.resource("about");
+  this.resource("resources");
+  this.resource("stubs");
+});
+
 App.Store = DS.Store.extend({
   revision: 13,
   adapter: 'App.MyCustomAdapter'

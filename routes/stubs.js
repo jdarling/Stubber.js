@@ -77,13 +77,16 @@ var createResource = updateResource = function(req, res, next){
       }else{
         store.put(id, req.body, function(err, record){
           var response = {root: resourceType};
-          response[resourceType] = record;
+          response[resourceType] = record instanceof Array?record.shift():record;
           if(err){
             res.send({
               root: 'error',
               error: err
             });
           }else{
+            if(response[response.root] instanceof Array){
+              response[response.root] = response[response.root].shift();
+            }
             res.send(response);
           }
         });
@@ -98,7 +101,7 @@ var createResource = updateResource = function(req, res, next){
       }else{
         store.insert(req.body, function(err, record){
           var response = {root: resourceType};
-          response[resourceType] = record;
+          response[resourceType] = record instanceof Array?record.shift():record;
           res.send(err||response);
         });
       }
