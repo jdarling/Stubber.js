@@ -1,4 +1,11 @@
 /* Put your CSS here */
-html, body {
-    margin: 20px;
+.loading{
+  background-image: url("../images/loader.gif") 
+  background-color: #DFDFDF
+}
+
+.is-loaded .loading {
+  /* back to default styling, e.g. */
+  background-image: none
+  background-color: white
 }

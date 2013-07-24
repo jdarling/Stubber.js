@@ -1,31 +1,8 @@
 App = Ember.Application.create();
 
-App.MyCustomAdapter = DS.Adapter.create({
-  find: function (store, type, id) {
-    console.log('f', store);
-    $.ajax({
-      url:      type.url,
-      dataType: 'json',
-      context:  store,
-      success:  function(response){
-        console.log('Find: ', response);
-        this.load(type, id, response.data);
-      }
-    });
-  },
-  findAll: function(store, type) {
-    var resource = type.toString().split('.').pop().toLowerCase()+'s';
-    $.ajax({
-      url:          '/api/v1/'+resource,
-      dataType: 'json',
-      context:  store,
-      success:  function(response){
-        console.log(response);
-        console.log(response[response.root]);
-        this.loadMany(type, response[response.root]);
-      }
-    });
-  }
+App.ResourcesAdapter = DS.StubberAdapter.create({
+  namespace: '/api/v1/resources',
+  identityField: '_id'
 });
 
 App.Resource = DS.Model.extend({
@@ -33,9 +10,15 @@ App.Resource = DS.Model.extend({
   description: DS.attr('string')
 });
 
-App.IndexRoute = Ember.Route.extend({
+App.ResourcesRoute = Ember.Route.extend({
   model: function(){
     return App.Resource.find();
+  }
+});
+
+App.IndexRoute = Ember.Route.extend({
+  model: function(){
+    return [1, 2, 3];
   }
 });
 
@@ -47,6 +30,34 @@ App.Router.map(function() {
 
 App.Store = DS.Store.extend({
   revision: 13,
-  adapter: 'App.MyCustomAdapter'
+  adapter: 'App.ResourcesAdapter'
 });
 
+App.ShowSpinnerWhileRendering = Ember.Mixin.create({
+  layout: Ember.Handlebars.compile('<div class="loading">{{ yield }}</div>'),
+
+  classNameBindings: ['isLoaded'],
+
+  isLoaded: function() {
+    return this.get('isInserted') && this.get('controller.isLoaded');
+  }.property('isInserted', 'controller.isLoaded'),
+
+  didInsertElement: function() {
+    this.set('inserted', true);
+    this._super();
+  }
+});
+
+App.ApplicationView = Ember.View.extend(App.ShowSpinnerWhileRendering, {
+});
+
+var converter = new Showdown.converter();
+
+Ember.Handlebars.registerBoundHelper('showdown', function(input) {
+  console.log('showdown: ', input);
+  return new Handlebars.SafeString(converter.makeHtml(input));
+});
+
+Ember.Handlebars.registerBoundHelper('date', function(date) {
+  return moment(date).fromNow();
+});

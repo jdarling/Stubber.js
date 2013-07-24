@@ -13,11 +13,18 @@
   </head>
   <body>
 
-    <script type="text/x-handlebars" id="index">
+    <script type="text/x-handlebars" id="about">
       About
     </script>
     <script type="text/x-handlebars" id="resources">
-      Resources
+      <ul>
+        {{#each controller}}
+        <li>
+          <dt>{{name}}</dt>
+          <dd>{{description}}</dd>
+        </li>
+        {{/each}}
+      </ul>
     </script>
     <script type="text/x-handlebars" id="stubs">
       Stubs
@@ -55,20 +62,17 @@
     </script>
 
     <script type="text/x-handlebars" id="index">
-      <ul>
-        {{#each controller}}
-        <li>
-          <dt>{{name}}</dt>
-          <dd>{{description}}</dd>
-        </li>
-        {{/each}}
-      </ul>
+      Welcome to Stubber.js
     </script>
 
     <script src="/js/libs/jquery-1.9.1.js"></script>
     <script src="/js/libs/handlebars-1.0.0-rc.4.js"></script>
     <script src="/js/libs/ember-1.0.0-rc.6.js"></script>
     <script src="/js/libs/ember-data.js"></script>
+    <script src="/js/DS.Stubber.Adapter.js"></script>
+    
+    <script src="/js/showdown.js"></script>
+    <script src="/js/moment.js"></script>
 
     <script src="/js/foundation.min.js"></script>
     <script src="/js/foundation/foundation.js"></script>
