@@ -1,1 +1,1 @@
-require('./bin/app');
+module.exports = require('./bin/app');
