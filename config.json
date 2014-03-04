@@ -4,8 +4,12 @@
       webroot: './webroot',
       port: 8080
     },
-    mongo: {
+    store: {
+      type: 'memory'
+      /*
+      type: 'mongo',
       connectionString: 'mongodb://localhost:27017/stubber'
+      */
     }
   }
 }

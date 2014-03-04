@@ -64,18 +64,14 @@ var getResource = function(req, res, next){
 
 var updateResource = createResource = function(req, res, next){
   var name = (req.body||{}).name||false;
-  var _id = (req.body||{})._id||req.params.id||req.query.id;
-  if(_id){
-    (req.body||{})._id = _id;
-  }
+  var _id = req.params.id;
   var processRequest = function(){
-    if((req.body||{})._id){
-      var id = req.body._id;
-      delete req.body.id;
+    if(_id){
+      delete req.body._id;
       if(req.body.name){
         req.body.name = inflection.pluralize(req.body.name).toLowerCase();
       }
-      resources.put(id, req.body, function(err, record){
+      resources.update(_id, req.body, function(err, record){
         if(err){
           res.send({
             root: 'error',
@@ -90,23 +86,34 @@ var updateResource = createResource = function(req, res, next){
       });
     }else if(name){
       req.body.name = inflection.pluralize(req.body.name).toLowerCase();
-      resources.insert(req.body, function(err, record){
+      resources.findByField('name', req.body.name, function(err, records){
         if(err){
-          res.send({
+          return res.send({root: 'error', error: err});
+        }
+        if(records.length>0){
+          return res.send({
             root: 'error',
-            error: err
-          });
-        }else{
-          res.send({
-            root: 'resource',
-            resource: record
+            error: 'A resource with name '+req.body.name+' already exists at '+records[0]._id
           });
         }
+        resources.insert(req.body, function(err, record){
+          if(err){
+            res.send({
+              root: 'error',
+              error: err
+            });
+          }else{
+            res.send({
+              root: 'resource',
+              resource: record
+            });
+          }
+        });
       });
     }else{
       res.send({
         root: 'error',
-        error: "You must supply a name for the resource"
+        error: 'You must supply a name for the resource'
       });
     }
   };

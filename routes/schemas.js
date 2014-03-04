@@ -10,6 +10,7 @@ var getSchemaListing = function(req, res, next){
     if(err){
       res.send(err);
     }else{
+      console.log(records);
       var result = {
         root: 'schemas',
         schemas: [],

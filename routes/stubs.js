@@ -14,7 +14,7 @@ var getStore = function(resourceType){
 
 var validateSchema = function(resourceType, pkt, callback){
   var resourceCollection = inflection.pluralize(resourceType).toLowerCase();
-  resources.get({name: resourceCollection}, function(err, records){
+  resources.findByField('name', resourceCollection, function(err, records){
     var record = (records||[]).shift();
     if(record && record.schema){
       var res = validator.validate(pkt, record.schema, function(isValid, errs){
@@ -64,9 +64,8 @@ var getResource = function(req, res, next){
   var resourceType = inflection.singularize(req.params.resource).toLowerCase();
   var resourceName = inflection.singularize(resourceType).toLowerCase();
   var store = getStore(resourceType);
-  var id = (req.body||{})._id||req.params.id||req.query.id;
-  req.query.filter = req.query.filter || {};
-  store.get(id||req.query, function(err, records){
+  var id = req.params.id;
+  store.get(id, function(err, records){
     if(err){
       return res.send(err);
     }
@@ -91,15 +90,14 @@ var createResource = updateResource = function(req, res, next){
   if(_id){
     (req.body||{})._id = _id;
   }
-  if((req.body||{})._id){
-    var id = req.body._id;
-    delete req.body.id;
+  if(_id){
+    delete req.body._id;
     req.body._lastUpdated = new Date();
     validateSchema(resourceType, req.body, function(err, record){
       if(err){
         res.send(err);
       }else{
-        store.put(id, req.body, function(err, record){
+        store.update(_id, req.body, function(err, record){
           var response = {root: resourceType};
           response[resourceType] = record instanceof Array?record.shift():record;
           if(err){
