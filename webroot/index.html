@@ -20,7 +20,7 @@
       <ul>
         {{#each controller}}
         <li>
-          <dt>{{name}}</dt>
+          <dt>{{#linkTo 'stubs.list' name}}{{name}}{{/linkTo}}</dt>
           <dd>{{description}}</dd>
         </li>
         {{/each}}
@@ -48,8 +48,6 @@
             <li class="active">{{#linkTo 'about'}}About{{/linkTo}}</li>
             <li class="divider"></li>
             <li class="active">{{#linkTo 'resources'}}Resources{{/linkTo}}</li>
-            <li class="divider"></li>
-            <li class="active">{{#linkTo 'stubs'}}Stubs{{/linkTo}}</li>
           </ul>
         </section>
       </nav>

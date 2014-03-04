@@ -5,6 +5,11 @@ App.ResourcesAdapter = DS.StubberAdapter.create({
   identityField: '_id'
 });
 
+App.StubsAdapter = DS.StubberAdapter.create({
+  namespace: '/api/v1/stubs',
+  identityField: '_id'
+});
+
 App.Resource = DS.Model.extend({
   name: DS.attr('string'),
   description: DS.attr('string')
@@ -25,7 +30,9 @@ App.IndexRoute = Ember.Route.extend({
 App.Router.map(function() {
   this.resource("about");
   this.resource("resources");
-  this.resource("stubs");
+  this.resource("stubs", function(){
+    this.route("list", {path: "/:resource_name"});
+  });
 });
 
 App.Store = DS.Store.extend({
@@ -54,7 +61,6 @@ App.ApplicationView = Ember.View.extend(App.ShowSpinnerWhileRendering, {
 var converter = new Showdown.converter();
 
 Ember.Handlebars.registerBoundHelper('showdown', function(input) {
-  console.log('showdown: ', input);
   return new Handlebars.SafeString(converter.makeHtml(input));
 });
 

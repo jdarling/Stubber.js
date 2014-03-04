@@ -15,6 +15,21 @@ var getResourceListing = function(req, res, next){
         error: err
       });
     }else{
+      records.methods = {
+        listing: apiRoute+'resources',
+        details: apiRoute+'resource/{{_id}}',
+        create: apiRoute+'resource',
+        update: apiRoute+'resource/{{_id}}',
+        delete: apiRoute+'resource/{{_id}}'
+      };
+      if(records[records.root] instanceof Array){
+        records[records.root].forEach(function(resource, index){
+          records[records.root][index] = {
+            _id: resource._id,
+            name: resource.name
+          };
+        });
+      }
       res.send(records);
     }
   });
@@ -24,15 +39,24 @@ var getResource = function(req, res, next){
   var id = (req.body||{})._id||req.params.id||req.query.id;
   req.query.filter = req.query.filter || {};
   resources.get(id||req.query, function(err, records){
+    var methods = {};
     if(err){
       res.send({
         root: 'error',
         error: err
       });
     }else{
+      resource = records instanceof Array?records.shift():records;
+      if(resource&&resource.name){
+        methods.listing = apiRoute+'stubs/'+resource.name;
+        methods.schema = apiRoute+'schema/'+resource.name;
+        methods.details = apiRoute+'resource/'+resource._id;
+        methods.create = apiRoute+'stub/'+resource.name;
+      }
       res.send({
         root: 'resource',
-        resource: records instanceof Array?records.shift():records
+        resource: resource,
+        methods: methods
       });
     }
   });
