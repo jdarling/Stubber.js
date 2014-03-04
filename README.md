@@ -28,21 +28,82 @@ Configuration
 
 Stubber.js is configured by setting the appropriate values in the config.json file within its root path.  The default config.json file is:
 
-    {
-      default: {
-        web: {
-          webroot: './webroot',
-          port: 8080
-        },
-        mongo: {
-          connectionString: 'mongodb://localhost:27017/stubber'
-        }
-      }
+```
+{
+  default: {
+    web: {
+      webroot: './webroot',
+      port: 8080
+    },
+    store: {
+      type: 'memory'
+      /* an example of mongo
+      type: 'mongo',
+      connectionString: 'mongodb://localhost:27017/stubber'
+      */
     }
+  }
+}
+```
 
   * default.web.webroot sets where the static HTML source files are served for the UI.
   * default.web.port is the port that the HTTP server will listen on.
-  * default.mongo.connectionString sets the connection string that should be used for the MongoDB connection and collection used by Stubber.js
+  * Yes, I know, that isn't valid JSON.  Live with it, the config loader lets you pass in pretty dirty JSON instead of nice clean JSON.
+
+Stores
+======
+
+The idea of stores is to abstract the storage engine from the functionality of Stubber.js.  This means you can utilize your favorite database or file format for storing your stubs.  Or in the case where you really don't care, you can always use the built in memory store that will just hold things till its restarted.
+
+Stores need to conform to the following prototype in order to be used:
+
+```
+Store(name)
+  get(_id, callback)
+    callback(error, record)
+  insert(record, callback)
+    callback(error, record)
+  update(_id, record, callback)
+    callback(error, record)
+  delete(_id, callback)
+    callback(error, numberRecordsDeleted)
+  count(callback)
+    callback(error, numberRecordsInStore)
+  toArray(offset, limit, callback)
+    callback(error, arrayOfRecords)
+```
+
+And allows for the following usage:
+
+```
+//To create a new store:
+var store = new Store('MyStore');
+
+//To add a record to a store:
+store.insert({some: 'value'}, function(err, record){
+  console.log('record added', record._id);
+});
+
+//To update a record:
+store.update(123, {some: 'value', another: 'value'}, function(err, record){
+  console.log('record udpated', record._id);
+});
+
+//To delete a record:
+store.delete(123, function(err, deleted){
+  if(deleted){
+    console.log('deleted '+deleted+' records');
+  }else{
+    console.log('no records deleted');
+  }
+});
+
+// etc...
+```
+
+So any other NPM modules out there that you want to use as a store you can, as long as it conforms to the above or can be modified to fit the above.  See /lib/stores/mongo.js for an example.
+
+To do that just npm install your store, then set the NPM Module name to the store.type in your config.json file.
 
 API
 ===
@@ -97,39 +158,39 @@ DELETE://api/v1/resource/:id
 
 Deletes a specific resource by identity.
 
-GET://stub/:resourceName
+GET://api/v1/stubs/:resourceName
 ------------------------
 
 Provides a pagged listing of all of the stub records for the specific resource requested.
 
-POST://stub/:resourceName
+POST://api/v1/stubs/:resourceName
 -------------------------
 
 Creates a new stub for the named resource within the running instance of Stubber.js
 
-PUT://stub/:resourceName
+PUT://api/v1/stubs/:resourceName
 -------------------------
 
 Creates a new stub for the named resource within the running instance of Stubber.js
-**NOTE:** You really should use POST://stub/:resourceName instead of PUT://stub/:resourceName
+**NOTE:** You really should use POST://api/v1/stubs/:resourceName instead of PUT://api/v1/stubs/:resourceName
 
-GET://stub/:resourceName/:id
+GET://api/v1/stubs/:resourceName/:id
 ----------------------------
 
 Gets a specific stub by identity from a named resource and returns its details back to the caller.
 
-PUT://stub/:resourceName/:id
+PUT://api/v1/stubs/:resourceName/:id
 ----------------------------
 
 Updates a specific stub by identity from the named resource.
 
-POST://stub/:resourceName/:id
+POST://api/v1/stubs/:resourceName/:id
 -----------------------------
 
 Updates a specific stub by identity from the named resource.
-**NOTE:** You really should use PUT://stub/:resourceName/:id instead of POST://stub/:resourceName/:id
+**NOTE:** You really should use PUT://api/v1/stubs/:resourceName/:id instead of POST://api/v1/stubs/:resourceName/:id
 
-DELETE://stub/:resourceName/:id
+DELETE://api/v1/stubs/:resourceName/:id
 -------------------------------
 
 Deletes a specific stub by identity for a particular named resource.
@@ -142,36 +203,63 @@ The output from Stubber.js will always be a JSON response that falls in to one o
 Errors
 ------
 
+Single error happened, typical case:
+
+```
+{
+  root: "error",
+  error: {
+    // All of the details associated with the error will be placed here
+  }
+}
+```
+
+Multiple errors happend, as an example validation of schema:
+
+```
+{
+  root: "errors",
+  errors: [
     {
-      root: "error",
-      error: {
-        // All of the details associated with the error will be placed here
-      }
+      // All of the details associated with the error will be placed here
     }
+  ]
+}
+```
 
 Listing
 -------
 
-    {
-      root: <listingResourceName>,
-      <listingResourceName>: [
-        // array of resources
-      ],
-      limit: //number of resources the result is limited to
-      offset: // offset of this block within the full result set
-      count: // total number of resources that were returned
-      length: // total number of resources that could have been returned 
-    }
+```
+{
+  root: <listingResourceName>
+  <listingResourceName>: [
+    // array of resources
+  ]
+  limit: //number of resources the result is limited to
+  offset: // offset of this block within the full result set
+  count: // total number of resources that were returned
+  length: // total number of resources that could have been returned
+  methods: {
+    // list of http endpoints that can be accessed, approprite method required
+  }
+}
+```
 
 Singular
 --------
 
-    {
-      root: <resourceName>,
-      <resourceName>: {
-        // singular resource result
-      }
-    }
+```
+{
+  root: <resourceName>
+  <resourceName>: {
+    // singular resource result
+  }
+  methods: {
+    // list of http endpoints that can be accessed, approprite method required
+  }
+}
+```
 
 Planned Features
 ================
@@ -183,6 +271,11 @@ Planned Features
 
 Update History
 ==============
+
+  * v0.0.2
+    - Abstracted out the concept of stores
+    - Added an in memory store as the default store
+    - Converted existing MongoStore to a plugin store
 
   * v0.0.1
     - Initial Alpha Release
