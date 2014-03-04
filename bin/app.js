@@ -2,7 +2,7 @@ require('../lib/webserver');
 
 // The following section of code just sets up some basics for the MemoryStore
 // Really this is just here to give you some sample data, just remove it :)
-//*
+/*
 (function(){
   var Store = require('../lib/store');
   var store = new Store('resources');
