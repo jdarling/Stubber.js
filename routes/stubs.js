@@ -1,13 +1,13 @@
 var apiRoute = '/api/v1/';
 var inflection = require( 'inflection' );
 var validator = require('../lib/validator');
-var MongoStore = require('../lib/mongostore');
-var resources = new MongoStore('resources');
+var Store = require('../lib/store');
+var resources = new Store('resources');
 var stores = {};
 
 var getStore = function(resourceType){
   var resourceCollection = inflection.pluralize(resourceType).toLowerCase();
-  var store = stores[resourceCollection] = stores[resourceCollection] || new MongoStore(resourceCollection);
+  var store = stores[resourceCollection] = stores[resourceCollection] || new Store(resourceCollection);
   store.name = resourceCollection;
   return store;
 };

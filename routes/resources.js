@@ -1,6 +1,6 @@
 var apiRoute = '/api/v1/';
 var validator = require('../lib/validator');
-var Store = require('../lib/mongostore');
+var Store = require('../lib/store');
 var resources = new Store('resources');
 var inflection = require( 'inflection' );
 var jsonschema4 = require('../lib/jsonschemav4');

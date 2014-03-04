@@ -1,7 +1,7 @@
 var apiRoute = '/api/v1/';
 var inflection = require('inflection');
-var MongoStore = require('../lib/mongostore');
-var resources = new MongoStore('resources');
+var Store = require('../lib/store');
+var resources = new Store('resources');
 
 var getSchemaListing = function(req, res, next){
   req.query.limit = parseInt(req.query.limit, 10)||null;
