@@ -11,7 +11,6 @@ Requirements
 ------------
 
   * [Node.js](http://nodejs.org/)
-  * [MongoDB](http://mongodb.org/)
 
 Why?
 ----
