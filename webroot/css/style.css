@@ -1,11 +1,28 @@
 /* Put your CSS here */
 .loading{
-  background-image: url("../images/loader.gif") 
-  background-color: #DFDFDF
+  background-image: url("../images/loader.gif");
+  background-color: #fffffff;
+  display: inline-block;
+  width: 32px;
+  height: 32px;
 }
 
-.is-loaded .loading {
-  /* back to default styling, e.g. */
-  background-image: none
-  background-color: white
+.footer{
+  position: fixed;
+  bottom: 0;
+  height: 50px;
+  width: 100%;
+  z-index: 4;
+}
+
+.footer a{
+  color: #1F8DD6;
+}
+
+#outlet{
+  margin: 70px 0;
+}
+
+.page{
+  margin: 1em;
 }

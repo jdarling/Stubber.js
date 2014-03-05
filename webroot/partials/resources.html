@@ -1,0 +1,23 @@
+<div class="page">
+  <h1>Resources</h1>
+  <table class="pure-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+    <!--{{#each items}}-->
+      <tr>
+        <td>{{name}}</td>
+        <td><a href="#resource/stubs/{{name}}" class="pure-button">List</a> <a href="#resource/{{_id}}" class="pure-button">details</a></td>
+      </tr>
+    <!--{{/each}}-->
+      <tr>
+        <td>&nbsp;</td>
+        <td><a href="#resource/new" class="pure-button">New</a></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

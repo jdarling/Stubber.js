@@ -1,0 +1,29 @@
+<div class="page">
+  <h1>{{segment}} Stubs</h1>
+  <table class="pure-table">
+    <thead>
+      <tr>
+      <!--{{#eachkeys schema.properties}}-->
+        <th>{{key}}</th>
+      <!--{{/eachkeys}}-->
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+    <!--{{#each stubs}}-->
+      <tr>
+      <!--{{#eachkeys ../schema.properties}}-->
+        <td>{{getval .. key ' '}}</td>
+      <!--{{/eachkeys}}-->
+        <td><a href="#resource/stub/{{../segment}}/{{_id}}" class="pure-button">View</a></td>
+      </tr>
+    <!--{{/each}}-->
+      <tr>
+      <!--{{#eachkeys schema.properties}}-->
+        <td>&nbsp;</td>
+      <!--{{/eachkeys}}-->
+        <td><a href="#resource/stub/{{segment}}/new" class="pure-button">New</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
