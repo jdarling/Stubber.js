@@ -26,3 +26,27 @@
 .page{
   margin: 1em;
 }
+
+a[data-toggle]{
+  color: #1F8DD6;
+  text-decoration: none;
+}
+
+a[data-toggle].active{
+  color: black;
+  text-decoration: underline;
+}
+
+[data-toggle-id]{
+  display: none;
+}
+
+[data-toggle-id].active{
+  display: block;
+}
+
+textarea.editor{
+  min-height: 500px;
+  height: 70%;
+  width: 100%;
+}

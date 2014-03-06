@@ -1,10 +1,3 @@
-/*
-var view = new Ractive({
-  el: '#outlet',
-  template: '#loading'
-});
-*/
-
 var view = false;
 var helpers = 
 (function(){
@@ -44,6 +37,11 @@ var helpers =
     getval: function(from, key, def){
       return from[key]||def||'';
     },
+    properCase: function(val){
+      var result = val.replace( /([A-Z])/g, " $1");
+      var finalResult = result.charAt(0).toUpperCase() + result.slice(1);
+      return finalResult;
+    },
   };
   var key;
   for(key in Handlebars.helpers){
@@ -53,26 +51,82 @@ var helpers =
 })();
 
 var aboutPage = false;
-var el = document.querySelector?function(id){
-  return document.querySelector(id);
-}:function(id){
-  return document.getElementById(id.substr(1));
+var el = function(sel){
+  return document.querySelector(sel);
+};
+
+var els = function(sel){
+  return Array.prototype.slice.call(document.querySelectorAll(sel));
 };
 
 Array.prototype.slice.call(document.querySelectorAll('[type="text/x-template"]')).forEach(function(elem){
+  var templateName = elem.getAttribute('id');
   if(!elem.innerHTML){
-    console.log('Need to load: ', elem.getAttribute('id'));
+    Loader.get('/partials/'+templateName+'.html', function(err, template){
+      if(err){
+        return;
+      }
+      elem.innerHTML = template;
+      Handlebars.registerPartial(templateName, template);
+    });
   }else{
     try{
-      Handlebars.registerPartial(elem.getAttribute('id'), elem.innerHTML);
+      Handlebars.registerPartial(templateName, elem.innerHTML);
     }catch(e){
-      console.log('Error in partial "'+elem.getAttribute('id')+'"');
+      console.log('Error in partial "'+templateName+'"');
       throw e;
     }
   }
 });
 
 var templates = {};
+
+var linkToggles = function(){
+  var pane = el('#outlet');
+  var toggles = Array.prototype.slice.call(pane.querySelectorAll('[data-toggle]'));
+  var toggleClick = function(e){
+      var pane = el('#outlet');
+      var active = Array.prototype.slice.call(pane.querySelectorAll('[data-toggle].active'));
+      var panes = Array.prototype.slice.call(pane.querySelectorAll('[data-toggle-id].active'));
+      var target = this.getAttribute('data-toggle');
+      active.forEach(function(active){
+        active.className = active.className.replace('active', '').trim();
+      });
+      target = pane.querySelector('[data-toggle-id="'+target+'"]');
+      panes.forEach(function(active){
+        active.className = active.className.replace('active', '').trim();
+      });
+      this.className += ' active';
+      target.className += ' active';
+      e.preventDefault();
+      return false;
+    };
+  toggles.forEach(function(elem){
+    console.log(elem);
+    elem.onclick = toggleClick;
+  });
+};
+
+var linkPostActions = function(){
+  var pane = el('#outlet');
+  var actors = Array.prototype.slice.call(pane.querySelectorAll('[data-post-to]'));
+  var actorClick = function(e){
+      var dest = this.getAttribute('data-post-to');
+      var src = pane.querySelector(this.getAttribute('data-post-src'));
+      var elems = src.querySelectorAll('[name]');
+      console.log(elems);
+      e.preventDefault();
+      return false;
+    };
+  actors.forEach(function(actor){
+    actor.onclick = actorClick;
+  });
+};
+
+var linkControlls = function(){
+  linkToggles();
+  linkPostActions();
+};
 
 var displayPage = function(pageName, data){
   var path = pageName.split('/');
@@ -122,23 +176,11 @@ var displayPage = function(pageName, data){
       }
     });
   }else{
-    /*
-    if(!template.match(/\{\{\>footer\}\}/)){
-      template += '{{>footer}}';
-    }
-    */
     data = data || {};
 
     var template = templates[pageName] || (templates[pageName] = Handlebars.compile(template));
     el('#outlet').innerHTML = template(data, {helpers: helpers});
-    /*
-    data.helpers = helpers;
-    view = new Ractive({
-      el: '#outlet',
-      template: template,
-      data: data
-    });
-    */
+    linkControlls();
   }
 };
 
@@ -213,7 +255,7 @@ nav
         if(err){
           return displayPage('error', err);
         }
-        displayPage('stub', stub);
+        displayPage('stub', {segment: params.name, stub: stub});
       });
     }
   })
@@ -225,9 +267,7 @@ nav
   })
   .change(function(params, old){
     displayPage('loading');
-    //setTimeout(function(){
-      nav.resolve();
-    //}, 1000);
+    nav.resolve();
     return this.defer;
   })
   ;
