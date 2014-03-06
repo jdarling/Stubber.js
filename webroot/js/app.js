@@ -155,6 +155,7 @@ var controllers = new Controllers();
 
 var ResourceController = function(container){
   var self = this;
+  var btnDelete = el(container, '#delete')||{};
   self.container = container;
   var submitHandler = function(e){
     var name = val(el(self.container, '[name="name"]'));
@@ -163,13 +164,11 @@ var ResourceController = function(container){
       var schema = JSON.parse(src);
       var tgt = el(self.container, 'form').getAttribute('action');
       var isNew = !tgt.split('/').pop();
-      console.log(tgt);
       Loader.post(tgt, {data: {name: name, schema: schema}}, function(err, response){
         if(err){
           return humane.log(err.items?err.items:err, {addnCls: 'humane-original-error'});
         }
         if(isNew){
-          console.log(window.location.hash, response);
           window.location.hash = window.location.hash + '/' + response._id;
         }
         humane.log('saved');
@@ -202,7 +201,7 @@ var ResourceController = function(container){
   };
   el(container, 'button.submit').onclick = submitHandler;
   el(container, '#editing').onchange = switchMode;
-  el(container, 'button#delete').onclick = deleteResource;
+  btnDelete.onclick = deleteResource;
 };
 ResourceController.prototype.teardown = function(){
   var self = this;
@@ -216,6 +215,7 @@ controllers.register('resource', ResourceController);
 
 var StubController = function(container){
   var self = this;
+  var btnDelete = el(container, '#delete')||{};
   self.container = container;
   var submitHandler = function(e){
     var src = val(el(self.container, '[name="stub"]'));
@@ -228,7 +228,6 @@ var StubController = function(container){
           return humane.log(err.items?err.items:err, {addnCls: 'humane-original-error'});
         }
         if(isNew){
-          console.log(window.location.hash, response);
           window.location.hash = window.location.hash + '/' + response._id;
         }
         humane.log('saved');
@@ -261,7 +260,7 @@ var StubController = function(container){
   };
   el(container, 'button.submit').onclick = submitHandler;
   el(container, '#editing').onchange = switchMode;
-  el(container, 'button#delete').onclick = deleteStub;
+  btnDelete.onclick = deleteStub;
 };
 StubController.prototype.teardown = function(){
   var self = this;
@@ -431,5 +430,5 @@ var init = function(){
 
   nav.otherwise('/');
 
-  nav.go();  
+  nav.go();
 };
