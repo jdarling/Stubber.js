@@ -1,15 +1,53 @@
-<div class="page">
-  <h1>{{properCase name}}</h1>
-  <div><a href="" data-toggle="view" class="active">View</a> <a href="" data-toggle="edit">Edit</a></div>
-  <h2>Schema:</h2>
-  <div data-toggle-id="view" class="active">
+<ul class="breadcrumb">
+  <li><a href="#resources" class="active">Resources</a></li>
+  <li><a href="#resource/{{_id}}">
+    {{#if isNew}}
+      New
+    {{else}}
+      {{name}}
+    {{/if}}
+  </a></li>
+</ul>
+<div class="page w-breadcrumb">
+  {{#if isNew}}
+  {{else}}
+    <button class="right pure-button pure-danger" data-after="#resources" data-delete="/api/v1/resource/{{_id}}" id="delete"><i class="fa fa-bolt"></i> Delete</button>
+    <a class="right pure-button" style="margin-right: 10px;" href="#resource/stubs/{{name}}"><i class="fa fa-list"></i> Stubs</a>
+  {{/if}}
+  <h1>
+    <div class="inlineblock">
+      <div class="editswitch">
+        <input type="checkbox" name="editing" class="editswitch-checkbox" id="editing" {{#if isNew}}checked{{else}}{{/if}}>
+        <label class="editswitch-label" for="editing">
+          <div class="editswitch-inner">
+            <span class="on">Edit</span>
+            <span class="off">View</span>
+          </div>
+        </label>
+      </div>
+    </div>
+    {{#if isNew}}
+      New
+    {{else}}
+      {{properCase name}}
+    {{/if}}
+  </h1>
+  <div data-toggle-id="view" {{#if isNew}}class=""{{else}}class="active"{{/if}}>
     <pre>{{JSONstringify schema}}</pre>
   </div>
-  <form data-toggle-id="edit" class="pure-form" action="/api/v1/resource/{{_id}}">
-    <input type="text" name="name" value="{{name}}" {{#if name}}readonly{{else}}placeholder="Unique Name..."{{/if}}/>
-    {{#notPrivate schema}}
-    <textarea name="schema" class="editor">{{JSONstringify this}}</textarea>
-    {{/notPrivate}}
-    <button class="pure-button submit">Save</button>
+  <form data-toggle-id="edit" action="/api/v1/resource/{{_id}}" {{#if isNew}}class="pure-form active"{{else}}class="pure-form"{{/if}}>
+    <fieldset>
+      <legend>Name:</legend>
+      <input type="text" name="name" value="{{name}}" {{#if isNew}}placeholder="Unique Name..."{{else}}readonly{{/if}}/>
+      {{#notPrivate schema}}
+    </fieldset>
+    <fieldset>
+      <legend>Schema:</legend>
+      <textarea name="schema" class="editor">{{JSONstringify this}}</textarea>
+      {{/notPrivate}}
+    </fieldset>
+    <fieldset>
+      <button class="pure-button submit">Save</button>
+    </fieldset>
   </form>
 </div>

@@ -96,31 +96,6 @@ var els = function(src, sel){
 
 var templates = {};
 
-var linkToggles = function(){
-  var pane = el('#outlet');
-  var toggles = Array.prototype.slice.call(pane.querySelectorAll('[data-toggle]'));
-  var toggleClick = function(e){
-      var pane = el('#outlet');
-      var active = Array.prototype.slice.call(pane.querySelectorAll('[data-toggle].active'));
-      var panes = Array.prototype.slice.call(pane.querySelectorAll('[data-toggle-id].active'));
-      var target = this.getAttribute('data-toggle');
-      active.forEach(function(active){
-        active.className = active.className.replace('active', '').trim();
-      });
-      target = pane.querySelector('[data-toggle-id="'+target+'"]');
-      panes.forEach(function(active){
-        active.className = active.className.replace('active', '').trim();
-      });
-      this.className += ' active';
-      target.className += ' active';
-      e.preventDefault();
-      return false;
-    };
-  toggles.forEach(function(elem){
-    elem.onclick = toggleClick;
-  });
-};
-
 var val = function(from){
   return from.value||from.getAttribute('value')||from.innerText||from.innerHTML;
 };
@@ -146,7 +121,6 @@ var linkControlls = (function(){
       }
       cleanupController();
     }
-    linkToggles();
     if(controllerName){
       controller = controllers.create(pane, controllerName);
     }
@@ -206,7 +180,29 @@ var ResourceController = function(container){
     e.preventDefault();
     return false;
   };
+  var switchMode = function(){
+    var editing = !!this.checked;
+    var pane = self.container;
+    var panes = els(pane, '[data-toggle-id].active');
+    var target = editing?'edit':'view';
+    target = pane.querySelector('[data-toggle-id="'+target+'"]');
+    panes.forEach(function(active){
+      active.className = active.className.replace('active', '').trim();
+    });
+    target.className += ' active';
+  };
+  var deleteResource = function(e){
+    var dest = this.getAttribute('data-after');
+    var api = this.getAttribute('data-delete');
+    Loader.delete(api, function(){
+      window.location.hash = dest;
+    });
+    e.preventDefault();
+    return false;
+  };
   el(container, 'button.submit').onclick = submitHandler;
+  el(container, '#editing').onchange = switchMode;
+  el(container, 'button#delete').onclick = deleteResource;
 };
 ResourceController.prototype.teardown = function(){
   var self = this;
@@ -243,7 +239,29 @@ var StubController = function(container){
     e.preventDefault();
     return false;
   };
+  var switchMode = function(){
+    var editing = !!this.checked;
+    var pane = self.container;
+    var panes = els(pane, '[data-toggle-id].active');
+    var target = editing?'edit':'view';
+    target = pane.querySelector('[data-toggle-id="'+target+'"]');
+    panes.forEach(function(active){
+      active.className = active.className.replace('active', '').trim();
+    });
+    target.className += ' active';
+  };
+  var deleteStub = function(e){
+    var dest = this.getAttribute('data-after');
+    var api = this.getAttribute('data-delete');
+    Loader.delete(api, function(){
+      window.location.hash = dest;
+    });
+    e.preventDefault();
+    return false;
+  };
   el(container, 'button.submit').onclick = submitHandler;
+  el(container, '#editing').onchange = switchMode;
+  el(container, 'button#delete').onclick = deleteStub;
 };
 StubController.prototype.teardown = function(){
   var self = this;
@@ -351,7 +369,7 @@ var init = function(){
     .navigate({
       path: '/resource',
       directions: function(params){
-        displayPage('resource');
+        displayPage('resource', {isNew: true});
       }
     })
     .navigate({
@@ -384,7 +402,7 @@ var init = function(){
     .navigate({
       path: '/resource/stub/{name}',
       directions: function(params){
-        displayPage('stub', {segment: params.name});
+        displayPage('stub', {segment: params.name, isNew: true});
       }
     })
     .navigate({

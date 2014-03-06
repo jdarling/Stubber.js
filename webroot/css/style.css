@@ -1,4 +1,16 @@
+.pure-danger{
+  background: red;
+}
+
+.right{
+  float: right;
+}
+
 /* Put your CSS here */
+.inlineblock{
+  display: inline-block;
+}
+
 .loading{
   background-image: url("../images/loader.gif");
   background-color: #fffffff;
@@ -24,7 +36,7 @@
 }
 
 .page{
-  margin: 1em;
+  margin: 15px;
 }
 
 a[data-toggle]{
@@ -49,4 +61,208 @@ textarea.editor{
   min-height: 300px;
   height: 70%;
   width: 100%;
+}
+
+
+/* Breadcrumbs Styles */
+.breadcrumb { 
+  list-style: none; 
+  overflow: hidden; 
+  font: 18px;
+  position: fixed;
+  top: 38px;
+  background: gray;
+  z-index: 6;
+  width: 100%;
+  padding: 0px;
+}
+.breadcrumb li { 
+  float: left; 
+}
+.breadcrumb li a {
+  color: white;
+  text-decoration: none; 
+  padding: 0px 0 0px 40px;
+  background: #2d3e50;                   /* fallback color */
+  background: hsla(204, 75%, 48%,1); 
+  position: relative; 
+  display: block;
+  float: left;
+}
+.breadcrumb li a:after {
+  content: " "; 
+  display: block; 
+  width: 0; 
+  height: 0;
+  border-top: 50px solid transparent;           /* Go big on the size, and let overflow hide */
+  border-bottom: 50px solid transparent;
+  border-left: 30px solid hsla(204, 75%, 48%,1);
+  position: absolute;
+  top: 50%;
+  margin-top: -50px; 
+  left: 100%;
+  z-index: 2; 
+} 
+.breadcrumb li a:before { 
+  content: " "; 
+  display: block; 
+  width: 0; 
+  height: 0;
+  border-top: 50px solid transparent;           /* Go big on the size, and let overflow hide */
+  border-bottom: 50px solid transparent;
+  border-left: 30px solid white;
+  position: absolute;
+  top: 50%;
+  margin-top: -50px; 
+  margin-left: 1px;
+  left: 100%;
+  z-index: 1; 
+} 
+.breadcrumb li:first-child a {
+  padding-left: 10px;
+}
+/*
+.breadcrumb li:nth-child(2) a       { background:        hsla(34,85%,45%,1); }
+.breadcrumb li:nth-child(2) a:after { border-left-color: hsla(34,85%,45%,1); }
+.breadcrumb li:nth-child(3) a       { background:        hsla(34,85%,55%,1); }
+.breadcrumb li:nth-child(3) a:after { border-left-color: hsla(34,85%,55%,1); }
+.breadcrumb li:nth-child(4) a       { background:        hsla(34,85%,65%,1); }
+.breadcrumb li:nth-child(4) a:after { border-left-color: hsla(34,85%,65%,1); }
+.breadcrumb li:nth-child(5) a       { background:        hsla(34,85%,75%,1); }
+.breadcrumb li:nth-child(5) a:after { border-left-color: hsla(34,85%,75%,1); }
+*/
+.breadcrumb li:last-child a {
+  background: transparent !important;
+  color: white;
+  pointer-events: none;
+  cursor: default;
+}
+.breadcrumb li:last-child a:after {
+  border: 0;
+}
+.breadcrumb li:last-child a:before {
+  border: 0;
+}
+.breadcrumb li a:hover {
+  background: hsla(211, 28%, 25%,1);
+}
+.breadcrumb li a:hover:after {
+  border-left-color: hsla(211, 28%, 25%,1) !important;
+}
+.page.w-breadcrumb{
+  margin-top: 90px;
+}
+
+/*
+ul.breadcrumb {
+  position: fixed;
+  top: 39px;
+  background: silver;
+  z-index: 6;
+  width: 100%;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+ul.breadcrumb li {
+  margin: 0;
+  padding: 0;
+  float: left;
+}
+ul.breadcrumb li a {
+  background: white;
+  display: inline-block;
+  padding: 0px 5px;
+  border: 1px solid silver;
+  text-decoration: none;
+  color: black;
+}
+ul.breadcrumb li a:hover{
+  background: gray;
+  color: white;
+}
+.page.w-breadcrumb{
+  margin-top: 80px;
+}
+*/
+
+/* Switches */
+
+.editswitch {
+  font-size: 16px;
+  font-weight: normal;
+  position: relative; width: 90px;
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select: none;
+}
+.editswitch-checkbox {
+  position: absolute;
+  left: -999px;
+  top: -999px;
+}
+.editswitch-label {
+  display: block;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid #cccccc;
+  border-radius: 0px;
+  height: 30px;
+}
+.editswitch-inner {
+  width: 200%; margin-left: -100%;
+  -moz-transition: margin 0.3s ease-in 0s;
+  -webkit-transition: margin 0.3s ease-in 0s;
+  -o-transition: margin 0.3s ease-in 0s;
+  transition: margin 0.3s ease-in 0s;
+}
+.editswitch-inner:before, .editswitch-inner:after {
+  float: left;
+  width: 50%;
+  height: 30px;
+  padding: 0;
+  line-height: 26px;
+  font-size: 14px;
+  color: white;
+  font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box; box-sizing: border-box;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+.editswitch-inner .on {
+  padding-left: 10px;
+  background-color: #1F8DD6;
+  color: #FFFFFF;
+  width: 90px;
+  display: inline-block;
+}
+.editswitch-inner .off {
+  padding-right: 10px;
+  background-color: #999999;
+  color: #FFFFFF;
+  text-align: right;
+  position: relative;
+  top: -27px;
+  left: 86px;
+  display: inline-block;
+  height: 27px;
+  width: 90px;
+}
+.editswitch-switch {
+  width: 25px;
+  margin: 0px;
+  background: #CCCCCC;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 65px;
+  -moz-transition: all 0.3s ease-in 0s; -webkit-transition: all 0.3s ease-in 0s;
+  -o-transition: all 0.3s ease-in 0s; transition: all 0.3s ease-in 0s; 
+}
+.editswitch-checkbox:checked + .editswitch-label .editswitch-inner {
+  margin-left: 0;
+}
+.editswitch-checkbox:checked + .editswitch-label .editswitch-switch {
+  right: 0px; 
 }

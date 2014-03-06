@@ -1,4 +1,8 @@
-<div class="page">
+<ul class="breadcrumb">
+  <li><a href="#resources" class="active">Resources</a></li>
+  <li><a href="#resource/stubs/{{segment}}">Stubs</a></li>
+</ul>
+<div class="page w-breadcrumb">
   <h1>{{properCase segment}} Stubs</h1>
   <table class="pure-table">
     <thead>
@@ -17,7 +21,7 @@
       <!--{{#eachkeys ../schema.properties}}-->
         <td>{{getval .. key ' '}}</td>
       <!--{{/eachkeys}}-->
-        <td><a href="#resource/stub/{{../segment}}/{{_id}}" class="pure-button">View</a></td>
+        <td><a href="#resource/stub/{{../segment}}/{{_id}}" class="pure-button"><i class="fa fa-file-text"></i> View</a></td>
       </tr>
     <!--{{/each}}-->
       <tr>
@@ -25,7 +29,7 @@
       <!--{{#eachkeys schema.properties}}-->
         <td>&nbsp;</td>
       <!--{{/eachkeys}}-->
-        <td><a href="#resource/stub/{{segment}}" class="pure-button">New</td>
+        <td><a href="#resource/stub/{{segment}}" class="pure-button"><i class="fa fa-file"></i> New</td>
       </tr>
     </tbody>
   </table>
