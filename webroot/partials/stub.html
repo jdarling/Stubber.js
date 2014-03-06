@@ -4,11 +4,10 @@
   <div data-toggle-id="view" class="active">
     <pre>{{JSONstringify stub}}</pre>
   </div>
-  <form data-toggle-id="edit" class="pure-form" id="stub">
-    <input type="hidden" name="name" value="{{name}}" />
+  <form data-toggle-id="edit" class="pure-form" action="/api/v1/stubs/{{segment}}/{{stub._id}}">
     {{#notPrivate stub}}
-    <textarea name="schema" class="editor">{{JSONstringify this}}</textarea>
+    <textarea name="stub" class="editor">{{JSONstringify this}}</textarea>
     {{/notPrivate}}
-    <button data-post-src="stub" data-post-to="/api/v1/stubs/{{segment}}/{{stub._id}}" class="pure-button">Save</button>
+    <button class="pure-button submit">Save</button>
   </form>
 </div>

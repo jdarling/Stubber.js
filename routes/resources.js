@@ -105,7 +105,7 @@ var updateResource = createResource = function(req, res, next){
           }else{
             res.send({
               root: 'resource',
-              resource: record
+              resource: record instanceof Array?record.shift():record
             });
           }
         });
@@ -127,7 +127,7 @@ var updateResource = createResource = function(req, res, next){
           count: errs.length,
           offset: 0
         };
-        callback(result);
+        res.send(result);
       }else{
         processRequest();
       }

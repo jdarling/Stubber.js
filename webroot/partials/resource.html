@@ -1,8 +1,15 @@
 <div class="page">
-  <h1>{{name}}</h1>
+  <h1>{{properCase name}}</h1>
+  <div><a href="" data-toggle="view" class="active">View</a> <a href="" data-toggle="edit">Edit</a></div>
   <h2>Schema:</h2>
-  <pre>{{JSONstringify schema}}</pre>
-  {{#notPrivate schema}}
-  <textarea>{{JSONstringify this}}</textarea>
-  {{/notPrivate}}
+  <div data-toggle-id="view" class="active">
+    <pre>{{JSONstringify schema}}</pre>
+  </div>
+  <form data-toggle-id="edit" class="pure-form" action="/api/v1/resource/{{_id}}">
+    <input type="text" name="name" value="{{name}}" {{#if name}}readonly{{else}}placeholder="Unique Name..."{{/if}}/>
+    {{#notPrivate schema}}
+    <textarea name="schema" class="editor">{{JSONstringify this}}</textarea>
+    {{/notPrivate}}
+    <button class="pure-button submit">Save</button>
+  </form>
 </div>

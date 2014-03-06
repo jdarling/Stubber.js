@@ -115,31 +115,27 @@ define([], function(){
         requestObject.onreadystatechange=function(){
           if(requestObject.readyState===4){
             if (requestObject.status===200 || window.location.href.indexOf("http")===-1){
-              //if(requestObject.responseXML){
-              //  callCallbacks(callHash, null, requestObject.responseXML);
-              //}else{
+              try{
+                response = JSON.parse(requestObject.responseText);
+              }catch(e){
+                response = requestObject.responseText;
+              }
+              if(response.error||response.errors){
+                callCallbacks(callHash, response);
+              }else{
+                items=response[response.root];
                 try{
-                  response = JSON.parse(requestObject.responseText);
+                  response = (items instanceof Array)?{
+                    items: items,
+                    offset: response.offset,
+                    limit: response.limit,
+                    count: response.count,
+                    length: items.length
+                  }:items||response;
                 }catch(e){
-                  response = requestObject.responseText;
                 }
-                if(response.error){
-                  callCallbacks(callHash, response);
-                }else{
-                  items=response[response.root];
-                  try{
-                    response = (items instanceof Array)?{
-                      items: items,
-                      offset: response.offset,
-                      limit: response.limit,
-                      count: response.count,
-                      length: items.length
-                    }:items||response;
-                  }catch(e){
-                  }
-                  callCallbacks(callHash, null, response);
-                }
-              //}
+                callCallbacks(callHash, null, response);
+              }
             }else{
               var err = new Error(requestObject.statusText+': '+(requestObject.responseText||requestObject.response));
               err.type = requestObject.statusText;

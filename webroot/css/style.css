@@ -46,7 +46,7 @@ a[data-toggle].active{
 }
 
 textarea.editor{
-  min-height: 500px;
+  min-height: 300px;
   height: 70%;
   width: 100%;
 }
