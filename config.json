@@ -5,12 +5,12 @@
       port: 8080
     },
     store: {
-      //type: 'memory'
-      //*
+      type: 'memory'
+      /*
       type: 'mongo',
       connectionString: 'mongodb://localhost:27017/stubber'
       //*/
     },
-    cluster: true
+    //cluster: true
   }
 }
