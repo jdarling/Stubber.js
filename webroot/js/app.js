@@ -22,7 +22,7 @@ var handlebarsHelpers = (function(){
       return options.fn(Object.keys(what));
     },
     eachkeys: function(what, options){
-      var keys = Object.keys(what);
+      var keys = Object.keys(what||{});
       var ret = '';
       keys.forEach(function(key){
         ret += options.fn({key: key, value: what[key]});
