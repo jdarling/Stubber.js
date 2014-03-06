@@ -1,7 +1,7 @@
 {
   "name": "stubber",
   "description": "Stubber.js a generic Resourcefully RESTful Stub API provider.",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "main": "server",
   "bin": {
     "start": "./server"

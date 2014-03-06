@@ -271,6 +271,10 @@ Planned Features
 Update History
 ==============
 
+  * v0.0.3
+    - Start on admin website
+    - Basics in place in admin except delete
+
   * v0.0.2
     - Abstracted out the concept of stores
     - Added an in memory store as the default store
