@@ -1,6 +1,7 @@
 var Application = function(){
   var self = this;
-  var aboutPage = false;
+  var aboutPageLoaded = false;
+  var startedPageLoaded = false;
   var partials = self.partials = new Partials({
     path: "/stubber/partials/",
     ext: ".html"
@@ -48,13 +49,30 @@ var Application = function(){
         }
       })
       .navigate({
+        path: '/started',
+        directions: function(params){
+          if(!startedPageLoaded){
+            Loader.get('/gettingstarted.md', function(err, response){
+              if(!err){
+                var converter = new Showdown.converter();
+                startedPageLoaded = true;
+                partials.set('started', '<div class="page">'+converter.makeHtml(response)+'</div>');
+                displayPage('started');
+              }
+            });
+          }else{
+            displayPage('started');
+          }
+        }
+      })
+      .navigate({
         path: '/about',
         directions: function(params){
-          if(!aboutPage){
+          if(!aboutPageLoaded){
             Loader.get('/readme.md', function(err, response){
               if(!err){
                 var converter = new Showdown.converter();
-                aboutPage = true;
+                aboutPageLoaded = true;
                 partials.set('about', '<div class="page">'+converter.makeHtml(response)+'</div>');
                 displayPage('about');
               }
